@@ -155,6 +155,8 @@ class Changelog:
         repository: str,
         provider: Optional[ProviderRefParser] = None,
         style: StyleType = None,
+        version: Optional[str] = None,
+        release: Optional[str] = None
     ):
         """
         Initialization method.
@@ -202,23 +204,29 @@ class Changelog:
         self.versions_list = v_list
         self.versions_dict = v_dict
 
+
         # guess the next version number based on last version and recent commits
         last_version = self.versions_list[0]
         if not last_version.tag and last_version.previous_version:
             last_tag = last_version.previous_version.tag
-            major = minor = False  # noqa: WPS429
-            for commit in last_version.commits:
-                if commit.style["is_major"]:
-                    major = True
-                    break
-                elif commit.style["is_minor"]:
-                    minor = True
-            if major:
-                planned_tag = bump(last_tag, "major")
-            elif minor:
-                planned_tag = bump(last_tag, "minor")
+            if version:
+                planned_tag = version
+            elif release:
+                planned_tag = bump(last_tag, release)
             else:
-                planned_tag = bump(last_tag, "patch")
+                major = minor = False  # noqa: WPS429
+                for commit in last_version.commits:
+                    if commit.style["is_major"]:
+                        major = True
+                        break
+                    elif commit.style["is_minor"]:
+                        minor = True
+                if major:
+                    planned_tag = bump(last_tag, "major")
+                elif minor:
+                    planned_tag = bump(last_tag, "minor")
+                else:
+                    planned_tag = bump(last_tag, "patch")
             last_version.planned_tag = planned_tag
             if self.provider:
                 last_version.url = self.provider.get_tag_url(tag=planned_tag)

@@ -26,6 +26,7 @@ else:
     from importlib import metadata  # noqa: WPS440
 
 STYLES = ("angular", "atom", "conventional", "basic")
+RELEASE_TYPES = ("patch", "minor", "major")
 
 
 class Templates(tuple):  # noqa: WPS600 (subclassing tuple)
@@ -87,6 +88,23 @@ def get_parser() -> argparse.ArgumentParser:
         'to a directory containing a file named "changelog.md".',
     )
     parser.add_argument(
+        "-f",
+        "--force",
+        default=None,
+        dest="force_version",
+        help="Manually set the version e.g. v6.0.0 ",
+    )
+
+    parser.add_argument(
+        "-r",
+        "--release",
+        choices=RELEASE_TYPES,
+        default=None,
+        dest="release",
+        help="Manually specify the release type [patch|minor|major] (instead of guessing)",
+    )
+
+    parser.add_argument(
         "-v",
         "--version",
         action="version",
@@ -123,7 +141,7 @@ def main(args: Optional[List[str]] = None) -> int:
         template = templates.get_template(opts.template)
 
     # build data
-    changelog = Changelog(opts.repository, style=opts.style)
+    changelog = Changelog(opts.repository, style=opts.style, version=opts.force_version, release=opts.release)
 
     # get rendered contents
     rendered = template.render(changelog=changelog)

@@ -1,10 +1,6 @@
 # git-changelog
 
-[![ci](https://github.com/pawamoy/git-changelog/workflows/ci/badge.svg)](https://github.com/pawamoy/git-changelog/actions?query=workflow%3Aci)
-[![documentation](https://img.shields.io/badge/docs-mkdocs%20material-blue.svg?style=flat)](https://pawamoy.github.io/git-changelog/)
-[![pypi version](https://img.shields.io/pypi/v/git-changelog.svg)](https://pypi.org/project/git-changelog/)
-[![gitpod](https://img.shields.io/badge/gitpod-workspace-blue.svg?style=flat)](https://gitpod.io/#https://github.com/pawamoy/git-changelog)
-[![gitter](https://badges.gitter.im/join%20chat.svg)](https://gitter.im/git-changelog/community)
+**NOTE:** This repo is a slightly modified version of [git-changelog](https://github.com/pawamoy/git-changelog). It allows to specify the release type at command line using `-r` flat, or force the version using `-f` flag instead of guessing it.
 
 Automatic Changelog generator using Jinja2 templates. From git logs to change logs.
 
@@ -52,11 +48,13 @@ Automatic Changelog generator using Jinja2 templates. From git logs to change lo
 ## Installation
 
 With `pip`:
+
 ```bash
 pip install git-changelog
 ```
 
 With [`pipx`](https://github.com/pipxproject/pipx):
+
 ```bash
 python3.7 -m pip install --user pipx
 pipx install git-changelog
@@ -84,6 +82,12 @@ optional arguments:
                         The Jinja2 template to use. Prefix with "path:" to
                         specify the path to a directory containing a file
                         named "changelog.md".
+  -f VERSION, --force VERSION
+                        Force a specific version number e.g. v1.5.9.
+                        This setting takes precedence over the release type.
+  -r {patch,minor,major}, --release {patch,minor,major}
+                        The release type to use for the next version,
+                        this settings takes precedence over over guessing next version.
   -v, --version         Show the current version of the program and exit.
 
 ```
